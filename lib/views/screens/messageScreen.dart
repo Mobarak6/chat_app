@@ -53,14 +53,10 @@ class MessageScreen extends StatelessWidget {
               }
 
               final document = snapshot.data!.docs;
-              // final otherDoc =
-              //     otherUserDoc(userData['frist'], userData['secend']);
-
-              // log(document[0]['showTime'].toString());
-              // log((document.length - 1).toString());
-              // log(document[document.length - 1].id);
-              // log('index: ' + document[0].id);
-              updateSeen(userData['frist'], userData['secend'], document[0].id);
+              if (document.isNotEmpty) {
+                updateSeen(
+                    userData['frist'], userData['secend'], document[0].id);
+              }
 
               return Column(
                 children: [
