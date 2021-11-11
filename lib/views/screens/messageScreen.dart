@@ -12,15 +12,19 @@ class MessageScreen extends StatelessWidget {
   MessageScreen({Key? key}) : super(key: key);
   final userData = Get.arguments;
 //  final controller = Get.put(MessageController());
-  void updateShowTime(String userNumber, String otherUserNumber, String docId,
-      bool currentShowTime) async {
-    await FirebaseFirestore.instance
+
+  void updateSeen(
+    String userNumber,
+    String otherUserNumber,
+    String docId,
+  ) {
+    FirebaseFirestore.instance
         .collection('chats')
-        .doc(userNumber)
-        .collection(otherUserNumber)
+        .doc(otherUserNumber)
+        .collection(userNumber)
         .doc(docId)
         .update({
-      'showTime': !currentShowTime,
+      'isSeen': true,
     });
   }
 
@@ -47,28 +51,61 @@ class MessageScreen extends StatelessWidget {
                   ),
                 );
               }
+
               final document = snapshot.data!.docs;
+              // final otherDoc =
+              //     otherUserDoc(userData['frist'], userData['secend']);
+
               // log(document[0]['showTime'].toString());
+              // log((document.length - 1).toString());
+              // log(document[document.length - 1].id);
+              // log('index: ' + document[0].id);
+              updateSeen(userData['frist'], userData['secend'], document[0].id);
 
               return Column(
                 children: [
                   Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      reverse: true,
-                      itemCount: document.length,
-                      itemBuilder: (context, item) => MessageBox(
-                        //  document[item]['message'],
-                        document[item]['senderId'] == userData['frist'],
-                        //   document[item]['time'],
-                        item,
-                        // document[item]['showTime'],
-                        document,
-                        userData,
-                      ),
+                      child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          reverse: true,
+                          itemCount: document.length,
+                          itemBuilder: (context, item) {
+                            // return FutureBuilder<QuerySnapshot>(
+                            //     future: otherUserDoc(
+                            //         userData['frist'], userData['secend']),
+                            //     builder: (context, otherSnapshot) {
+                            //       if (otherSnapshot.connectionState ==
+                            //           ConnectionState.waiting) {
+                            //         return const Center(
+                            //             child: Text('loading...'));
+                            //       }
+
+                            //       final otherDocument = otherSnapshot.data!.docs;
+                            //       // var list =
+                            //       //     otherDocument.map((e) => e.id).toList();
+
+                            //       if (document[item]['senderId'] ==
+                            //           userData['secend']) {
+                            //         updateSeen(
+                            //           userData['frist'],
+                            //           userData['secend'],
+                            //           document[item].id,
+                            //           //  list,
+                            //           //  otherDocument[item].id,
+                            //           true,
+                            //           otherDocument,
+                            //         );
+                            //       }
+                            return MessageBox(
+                              document[item]['senderId'] == userData['frist'],
+                              item,
+                              document,
+                              userData,
+                            );
+                          })
+
                       //    Text(document[item]['message']),
-                    ),
-                  ),
+                      ),
                   InputMessage(
                     fristUser: userData['frist'],
                     otherUser: userData['secend'],

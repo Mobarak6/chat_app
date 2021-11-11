@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_crud/controllers/messageController.dart';
 import 'package:firebase_auth_crud/services/database.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
 class MessageBox extends StatelessWidget {
@@ -33,6 +34,13 @@ class MessageBox extends StatelessWidget {
     var timeStamp = document[index]['time'].toDate();
     var time = DateTime.now().difference(timeStamp);
     bool showTime = document[index]['showTime'];
+    bool isSeen = document[index]['isSeen'];
+    // var data =  FirebaseFirestore.instance
+    //       .collection('chats/${userData['secend']}/${userData['frist']}')
+    //       .orderBy('time', descending: true)
+    //       .get();
+    //       data.
+
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
@@ -79,6 +87,30 @@ class MessageBox extends StatelessWidget {
                 ),
               ),
             ),
+
+            if (isMe)
+              isSeen
+                  ? Text(
+                      'seen',
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 10,
+                      ),
+                    )
+                  : Text(
+                      'Unseen',
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 10,
+                      ),
+                    ),
+            // : Text(
+            //     'unseen',
+            //     style: TextStyle(
+            //       color: Colors.red[400],
+            //       fontSize: 10,
+            //     ),
+            //   ),
             showTime
                 ? Padding(
                     padding: const EdgeInsets.only(right: 8),
